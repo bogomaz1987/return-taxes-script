@@ -1,0 +1,15 @@
+[project]
+name = "return-taxes-script"
+version = "0.1.0"
+description = "Collect merged GitHub PRs for a month, screenshot their diffs, and build a tax-return hours table using the Polish working calendar."
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "playwright>=1.44",
+    "workalendar>=17.0",
+    "python-dotenv>=1.0",
+    "rich>=13.0",
+]
+
+[tool.uv]
+package = false
