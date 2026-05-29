@@ -22,7 +22,8 @@ uv run python main.py --no-screenshots # table only, skip the browser
 
 Config comes from `.env` (see `.env.example`). Required: `GITHUB_TOKEN` (used for BOTH the
 PR search and the diff fetch; authorize it for SSO if the repo's org enforces it), `REPO`
-(`owner/name`), `AUTHOR`. Optional: `RETURN_RATE`, `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`.
+(`owner/name`), `AUTHOR`. Optional: `REFUND_PERCENT` (0-100, stored as the `return_rate`
+fraction), `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`.
 
 ## Architecture
 

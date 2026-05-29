@@ -83,7 +83,7 @@ for your tax submission.
 | `GITHUB_TOKEN` | Token used for both the PR search and the diff download | — (required) |
 | `REPO` | Repository as `owner/name` | — (required) |
 | `AUTHOR` | PR author's GitHub login | — (required) |
-| `RETURN_RATE` | Refundable share of the time | `0.8` |
+| `REFUND_PERCENT` | Refundable share of the time, as a percentage (0-100) | `80` |
 | `WORK_HOURS_PER_DAY` | Hours in one working day | `8` |
 | `OUTPUT_DIR` | Root folder for screenshots and the CSV | `screenshots` |
 | `HEADLESS` | `true` runs the browser hidden | `true` |

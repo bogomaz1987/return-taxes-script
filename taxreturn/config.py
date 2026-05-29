@@ -38,7 +38,7 @@ def load() -> Config:
         github_token=token,
         repo=repo,
         author=author,
-        return_rate=float(os.getenv("RETURN_RATE", "0.8")),
+        return_rate=float(os.getenv("REFUND_PERCENT", "80")) / 100,
         work_hours_per_day=float(os.getenv("WORK_HOURS_PER_DAY", "8")),
         output_dir=Path(os.getenv("OUTPUT_DIR", "screenshots")).expanduser(),
         headless=os.getenv("HEADLESS", "true").lower() in ("1", "true", "yes"),
