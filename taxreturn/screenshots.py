@@ -13,13 +13,16 @@ from playwright.sync_api import Page, sync_playwright
 from .diff_render import diff_to_html
 from .github_api import PullRequest, get_pr_diff
 
-_INVALID = re.compile(r"[/\\\n\r\t]")
+# Characters forbidden in Windows / OneDrive file names, plus control chars and '#'.
+_INVALID = re.compile(r'[<>:"/\\|?*#\x00-\x1f]')
 
 
 def sanitize(name: str) -> str:
-    """Make a PR title safe to use as a folder name (keeps ':' as requested)."""
-    cleaned = _INVALID.sub("-", name).strip()
-    return cleaned[:150] or "pr"
+    """Make a PR title safe and readable as a folder name (OneDrive/Windows friendly)."""
+    cleaned = _INVALID.sub(" ", name)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()  # collapse whitespace
+    cleaned = cleaned.strip(" .-")  # no leading/trailing spaces, dots or dashes
+    return cleaned[:150].strip() or "pr"
 
 
 def capture_html_diff(
@@ -73,7 +76,7 @@ def capture_all(
             diff_text = get_pr_diff(cfg.repo, pr.number, cfg.github_token)
             html = diff_to_html(diff_text, pr.title)
             shots = capture_html_diff(page, html, folder)
-            print(f"    -> {shots} скриншот(ов) в {folder}")
+            print(f"    -> {shots} screenshot(s) in {folder}")
 
         context.close()
         browser.close()

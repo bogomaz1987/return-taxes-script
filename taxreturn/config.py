@@ -31,8 +31,8 @@ def load() -> Config:
     ]
     if missing:
         raise SystemExit(
-            f"Не заданы переменные: {', '.join(missing)}. "
-            "Скопируйте .env.example в .env и заполните их."
+            f"Missing variables: {', '.join(missing)}. "
+            "Copy .env.example to .env and fill them in."
         )
     return Config(
         github_token=token,

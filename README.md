@@ -22,15 +22,17 @@ spent time is refundable; both values are configurable.
 ```
 screenshots/
   2026-05/
-    BP-3168: rm PlanContent - Release 7 - drop PlanContent/
+    BP-3168 rm PlanContent - Release 7 - drop PlanContent/
       screenshot_1.jpg
       screenshot_2.jpg
       ...
     report.csv
 ```
 
-Each pull request gets its own folder named after the PR title. The diff is captured
-top to bottom as a series of JPEG slices (`screenshot_1.jpg`, `screenshot_2.jpg`, ...).
+Each pull request gets its own folder named after the PR title. Characters that are
+not allowed in Windows / OneDrive file names (such as `: | # / \ * ? " < >`) are
+removed so the folders stay readable. The diff is captured top to bottom as a series
+of JPEG slices (`screenshot_1.jpg`, `screenshot_2.jpg`, ...).
 
 ## Requirements
 

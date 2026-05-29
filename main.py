@@ -32,25 +32,25 @@ def parse_month(value: str | None) -> tuple[int, int]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Tax-return PR screenshots & hours table.")
-    parser.add_argument("--month", help="Целевой месяц YYYY-MM (по умолчанию текущий).")
+    parser.add_argument("--month", help="Target month YYYY-MM (defaults to the current month).")
     parser.add_argument(
         "--no-screenshots",
         action="store_true",
-        help="Не делать скриншоты, только посчитать таблицу часов.",
+        help="Skip screenshots and only compute the hours table.",
     )
     args = parser.parse_args()
 
     cfg = config.load()
     year, month = parse_month(args.month)
     month_dir = f"{year:04d}-{month:02d}"
-    print(f"Месяц: {month_dir} | репозиторий: {cfg.repo} | автор: {cfg.author}")
+    print(f"Month: {month_dir} | repository: {cfg.repo} | author: {cfg.author}")
 
     prs = get_merged_prs(cfg.repo, cfg.author, year, month, cfg.github_token)
     if not prs:
-        print("Смерженных PR за этот месяц не найдено.")
+        print("No merged PRs found for this month.")
         return 0
 
-    print(f"\nНайдено смерженных PR: {len(prs)}")
+    print(f"\nMerged PRs found: {len(prs)}")
     for pr in prs:
         print(f"  #{pr.number}  {pr.merged_at:%d.%m.%Y}  {pr.title}")
 
@@ -59,9 +59,9 @@ def main() -> int:
     returnable = round(total * cfg.return_rate, 2)
     hours_list = distribute_hours(total, len(prs), cfg.return_rate)
     print(
-        f"\nРабочих дней (Польша): {days} → {total:g} ч | "
-        f"к возврату {cfg.return_rate * 100:g}% = {returnable:g} ч | "
-        f"на каждый PR ≈ {returnable / len(prs):.2f} ч"
+        f"\nWorking days (Poland): {days} → {total:g} h | "
+        f"refundable {cfg.return_rate * 100:g}% = {returnable:g} h | "
+        f"per PR ≈ {returnable / len(prs):.2f} h"
     )
 
     out_root = cfg.output_dir / month_dir
@@ -73,7 +73,7 @@ def main() -> int:
 
     csv_path = out_root / "report.csv"
     write_csv(rows, csv_path)
-    print(f"\nCSV сохранён: {csv_path}")
+    print(f"\nCSV saved: {csv_path}")
     return 0
 
 
