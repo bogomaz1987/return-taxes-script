@@ -18,7 +18,7 @@ def _fmt_hours(hours: float) -> str:
 
 
 def build_rows(
-    prs: list[PullRequest], hours_list: list[float], folders: dict[int, Path]
+    prs: list[PullRequest], hours_list: list[float], attachments: dict[int, str]
 ) -> list[dict[str, str]]:
     rows = []
     for pr, hours in zip(prs, hours_list):
@@ -27,7 +27,7 @@ def build_rows(
                 "PR Created": pr.created_at.strftime("%d.%m.%Y"),
                 "PR Merge Date": pr.merged_at.strftime("%d.%m.%Y"),
                 "Time": _fmt_hours(hours),
-                "Attachment": str(folders[pr.number]),
+                "Attachment": attachments[pr.number],
                 "Description": pr.title,
             }
         )

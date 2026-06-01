@@ -20,6 +20,7 @@ from taxreturn.github_api import get_merged_prs
 from taxreturn.hours import distribute_hours, total_working_hours, working_days_count
 from taxreturn.report import build_rows, print_table, write_csv
 from taxreturn.screenshots import capture_all
+from taxreturn.sharepoint import SharePointLinker
 
 
 def parse_month(value: str | None) -> tuple[int, int]:
@@ -67,7 +68,15 @@ def main() -> int:
     out_root = cfg.output_dir / month_dir
     folders = capture_all(prs, out_root, cfg, skip=args.no_screenshots)
 
-    rows = build_rows(prs, hours_list, folders)
+    if cfg.sharepoint_url:
+        linker = SharePointLinker(cfg.sharepoint_url)
+        attachments = {
+            pr.number: linker.url_for(year, month, folders[pr.number].name) for pr in prs
+        }
+    else:
+        attachments = {pr.number: str(folders[pr.number]) for pr in prs}
+
+    rows = build_rows(prs, hours_list, attachments)
     print()
     print_table(rows)
 

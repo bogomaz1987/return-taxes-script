@@ -17,6 +17,7 @@ class Config:
     work_hours_per_day: float
     output_dir: Path
     headless: bool
+    sharepoint_url: str
 
 
 def load() -> Config:
@@ -42,4 +43,5 @@ def load() -> Config:
         work_hours_per_day=float(os.getenv("WORK_HOURS_PER_DAY", "8")),
         output_dir=Path(os.getenv("OUTPUT_DIR", "screenshots")).expanduser(),
         headless=os.getenv("HEADLESS", "true").lower() in ("1", "true", "yes"),
+        sharepoint_url=os.getenv("SHAREPOINT_FOLDER_URL", "").strip(),
     )

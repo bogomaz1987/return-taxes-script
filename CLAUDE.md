@@ -23,7 +23,7 @@ uv run python main.py --no-screenshots # table only, skip the browser
 Config comes from `.env` (see `.env.example`). Required: `GITHUB_TOKEN` (used for BOTH the
 PR search and the diff fetch; authorize it for SSO if the repo's org enforces it), `REPO`
 (`owner/name`), `AUTHOR`. Optional: `REFUND_PERCENT` (0-100, stored as the `return_rate`
-fraction), `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`.
+fraction), `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`, `SHAREPOINT_FOLDER_URL`.
 
 ## Architecture
 
@@ -41,7 +41,11 @@ fraction), `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`.
 - `screenshots.py` — Playwright (headless ok). `capture_all()` loops PRs: fetch diff → render HTML →
   `capture_html_diff()` loads it via `page.set_content` and saves viewport-sized `screenshot_N.jpg`
   slices. **No GitHub web login / SSO** — only local HTML is rendered.
-- `report.py` — builds rows, prints a `rich` table, writes `report.csv`.
+- `sharepoint.py` — `SharePointLinker` parses a sample `AllItems.aspx?id=` folder link,
+  keeps the root (path minus the last 3 segments: year/month/folder) + host + library path +
+  `viewid`, and rebuilds a deep link per PR as `<root>/<YYYY>/<MM MonthName>/<folder>`.
+- `report.py` — builds rows (Attachment = SharePoint URL when configured, else local path),
+  prints a `rich` table, writes `report.csv`.
 
 ## Conventions / gotchas
 
