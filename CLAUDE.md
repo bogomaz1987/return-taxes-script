@@ -22,7 +22,7 @@ uv run python main.py --no-screenshots # table only, skip the browser
 
 Config comes from `.env` (see `.env.example`). Required: `GITHUB_TOKEN` (used for BOTH the
 PR search and the diff fetch; authorize it for SSO if the repo's org enforces it), `REPO`
-(`owner/name`), `AUTHOR`. Optional: `REFUND_PERCENT` (0-100, stored as the `return_rate`
+(`owner/name`, or several comma-separated — parsed into `Config.repos`), `AUTHOR`. Optional: `REFUND_PERCENT` (0-100, stored as the `return_rate`
 fraction), `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`, `SHAREPOINT_FOLDER_URL`.
 
 ## Architecture
@@ -30,8 +30,9 @@ fraction), `WORK_HOURS_PER_DAY`, `OUTPUT_DIR`, `HEADLESS`, `SHAREPOINT_FOLDER_UR
 `main.py` orchestrates; logic lives in the `taxreturn/` package:
 
 - `config.py` — loads `.env` into a `Config` dataclass.
-- `github_api.py` — `get_merged_prs()` queries the GitHub **Search API**
-  (`is:pr is:merged merged:START..END`), returns `PullRequest` dataclasses sorted by merge date.
+- `github_api.py` — `get_merged_prs()` takes a list of repos, queries the GitHub **Search API**
+  (one `repo:` qualifier each, `is:pr is:merged merged:START..END`), returns `PullRequest`
+  dataclasses (each carrying its own `repo`) sorted by merge date.
   `get_pr_diff()` fetches a PR's unified diff via the API (`Accept: application/vnd.github.v3.diff`),
   falling back to assembling per-file patches from the files endpoint for oversized diffs.
 - `diff_render.py` — `_parse()` turns a unified diff into files/rows; `diff_to_html()` emits a

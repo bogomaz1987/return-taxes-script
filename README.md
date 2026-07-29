@@ -62,7 +62,8 @@ Open `.env` and set at least these three values:
   *Personal access tokens*. A classic token needs the `repo` scope. If the repository
   belongs to an organization that enforces SSO, open the token and click
   *Configure SSO* → *Authorize* for that organization.
-- `REPO` — the repository to scan, written as `owner/name`.
+- `REPO` — the repository to scan, written as `owner/name`. To scan several
+  repositories, list them separated by commas: `owner/repo1,owner/repo2`.
 - `AUTHOR` — the GitHub login whose merged pull requests you want.
 
 ## Usage
@@ -81,7 +82,7 @@ for your tax submission.
 | Variable | Meaning | Default |
 |---|---|---|
 | `GITHUB_TOKEN` | Token used for both the PR search and the diff download | — (required) |
-| `REPO` | Repository as `owner/name` | — (required) |
+| `REPO` | Repository `owner/name`, or several comma-separated | — (required) |
 | `AUTHOR` | PR author's GitHub login | — (required) |
 | `REFUND_PERCENT` | Refundable share of the time, as a percentage (0-100) | `80` |
 | `WORK_HOURS_PER_DAY` | Hours in one working day | `8` |

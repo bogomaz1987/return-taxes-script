@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -11,7 +12,7 @@ from dotenv import load_dotenv
 @dataclass
 class Config:
     github_token: str
-    repo: str
+    repos: list[str]
     author: str
     return_rate: float
     work_hours_per_day: float
@@ -35,9 +36,10 @@ def load() -> Config:
             f"Missing variables: {', '.join(missing)}. "
             "Copy .env.example to .env and fill them in."
         )
+    repos = [r for r in re.split(r"[,\s]+", repo) if r]
     return Config(
         github_token=token,
-        repo=repo,
+        repos=repos,
         author=author,
         return_rate=float(os.getenv("REFUND_PERCENT", "80")) / 100,
         work_hours_per_day=float(os.getenv("WORK_HOURS_PER_DAY", "8")),

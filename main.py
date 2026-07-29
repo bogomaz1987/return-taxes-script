@@ -44,16 +44,18 @@ def main() -> int:
     cfg = config.load()
     year, month = parse_month(args.month)
     month_dir = f"{year:04d}-{month:02d}"
-    print(f"Month: {month_dir} | repository: {cfg.repo} | author: {cfg.author}")
+    print(
+        f"Month: {month_dir} | repositories: {', '.join(cfg.repos)} | author: {cfg.author}"
+    )
 
-    prs = get_merged_prs(cfg.repo, cfg.author, year, month, cfg.github_token)
+    prs = get_merged_prs(cfg.repos, cfg.author, year, month, cfg.github_token)
     if not prs:
         print("No merged PRs found for this month.")
         return 0
 
     print(f"\nMerged PRs found: {len(prs)}")
     for pr in prs:
-        print(f"  #{pr.number}  {pr.merged_at:%d.%m.%Y}  {pr.title}")
+        print(f"  #{pr.number}  {pr.merged_at:%d.%m.%Y}  [{pr.repo}]  {pr.title}")
 
     days = working_days_count(year, month)
     total = total_working_hours(year, month, cfg.work_hours_per_day)
@@ -62,7 +64,7 @@ def main() -> int:
     print(
         f"\nWorking days (Poland): {days} → {total:g} h | "
         f"refundable {cfg.return_rate * 100:g}% = {returnable:g} h | "
-        f"per PR ≈ {returnable / len(prs):.2f} h"
+        f"distributed as whole hours: {sum(hours_list)} h across {len(prs)} PRs"
     )
 
     out_root = cfg.output_dir / month_dir

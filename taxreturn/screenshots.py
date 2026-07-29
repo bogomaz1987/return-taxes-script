@@ -73,7 +73,7 @@ def capture_all(
         for pr in prs:
             folder = folders[pr.number]
             print(f"  PR #{pr.number}: {pr.title}")
-            diff_text = get_pr_diff(cfg.repo, pr.number, cfg.github_token)
+            diff_text = get_pr_diff(pr.repo, pr.number, cfg.github_token)
             html = diff_to_html(diff_text, pr.title)
             shots = capture_html_diff(page, html, folder)
             print(f"    -> {shots} screenshot(s) in {folder}")

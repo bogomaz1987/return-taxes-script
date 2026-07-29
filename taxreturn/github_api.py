@@ -15,6 +15,7 @@ class PullRequest:
     number: int
     title: str
     url: str
+    repo: str  # "owner/name" — which repository this PR belongs to
     created_at: dt.datetime
     merged_at: dt.datetime
 
@@ -29,11 +30,12 @@ def _parse_dt(raw: str) -> dt.datetime:
 
 
 def get_merged_prs(
-    repo: str, author: str, year: int, month: int, token: str
+    repos: list[str], author: str, year: int, month: int, token: str
 ) -> list[PullRequest]:
-    """Return PRs by `author` in `repo` that were merged within the given month."""
+    """Return PRs by `author` across `repos` that were merged within the given month."""
     start, end = _month_range(year, month)
-    query = f"repo:{repo} author:{author} is:pr is:merged merged:{start}..{end}"
+    repo_filter = " ".join(f"repo:{r}" for r in repos)
+    query = f"{repo_filter} author:{author} is:pr is:merged merged:{start}..{end}"
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json",
@@ -58,6 +60,7 @@ def get_merged_prs(
                     number=it["number"],
                     title=it["title"],
                     url=it["html_url"],
+                    repo="/".join(it["repository_url"].split("/")[-2:]),
                     created_at=_parse_dt(it["created_at"]),
                     merged_at=_parse_dt(merged_raw),
                 )

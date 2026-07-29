@@ -23,16 +23,16 @@ def total_working_hours(year: int, month: int, hours_per_day: float = 8.0) -> fl
     return working_days_count(year, month) * hours_per_day
 
 
-def distribute_hours(total: float, n: int, rate: float = 0.8) -> list[float]:
-    """Split `rate` (e.g. 80%) of `total` hours evenly across `n` PRs.
+def distribute_hours(total: float, n: int, rate: float = 0.8) -> list[int]:
+    """Split `rate` (e.g. 80%) of `total` hours across `n` PRs as whole hours.
 
-    Each share is rounded to 2 decimals; the last one absorbs the rounding
-    drift so the list sums exactly to `total * rate`.
+    Uses the largest-remainder method: the refundable total is rounded to a whole
+    number of hours, then shared as evenly as possible. The leftover hours are given
+    out one per PR (no rounding down), so the shares sum exactly to that total and
+    differ by at most one hour.
     """
     if n == 0:
         return []
-    returnable = total * rate
-    per = round(returnable / n, 2)
-    shares = [per] * n
-    shares[-1] = round(returnable - per * (n - 1), 2)
-    return shares
+    returnable = round(total * rate)
+    base, remainder = divmod(returnable, n)
+    return [base + 1 if i < remainder else base for i in range(n)]

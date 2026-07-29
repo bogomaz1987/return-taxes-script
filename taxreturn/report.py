@@ -13,8 +13,8 @@ COLUMNS = ["PR Created", "PR Merge Date", "Time", "Attachment", "Description"]
 _TOTAL_LABEL = "Total"
 
 
-def _fmt_hours(hours: float) -> str:
-    return f"{hours:g} hrs"
+def _fmt_hours(hours: int) -> str:
+    return f"{hours} hrs"
 
 
 def build_rows(
